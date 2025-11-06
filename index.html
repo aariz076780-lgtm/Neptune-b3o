@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neptune B2O Chatbot</title>
+  <style>
+    body {
+      background: #0a0f1f;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    #chat-box {
+      width: 90%;
+      max-width: 500px;
+      height: 400px;
+      overflow-y: auto;
+      background: #121830;
+      border-radius: 10px;
+      padding: 10px;
+    }
+    input {
+      width: 80%;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      margin-top: 10px;
+    }
+    button {
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background: #0078ff;
+      color: white;
+      cursor: pointer;
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Neptune B2O Chat</h1>
+  <div id="chat-box"></div>
+  <div>
+    <input type="text" id="user-input" placeholder="Say something..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+
+  <script>
+    async function sendMessage() {
+      const input = document.getElementById("user-input");
+      const chatBox = document.getElementById("chat-box");
+      const message = input.value;
+      if (!message.trim()) return;
+
+      chatBox.innerHTML += `<p><b>You:</b> ${message}</p>`;
+      input.value = "";
+
+      const response = await fetch("/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      });
+      const data = await response.json();
+
+      chatBox.innerHTML += `<p><b>Neptune:</b> ${data.reply}</p>`;
+      chatBox
